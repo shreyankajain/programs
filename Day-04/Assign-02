@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+struct Order {
+    int orderID;
+    char customerName[50];
+    char product[50];
+    int amount;
+};
+void writeToFile(struct Order orders[], int n) {
+    FILE *fptr = fopen("orders.txt", "w");
+    if (fptr == NULL) {
+        printf("Error opening file!\n");
+        exit(1);
+    }
+    for (int i = 0; i < n; i++) {
+        fprintf(fptr, "Order %d: %d, %s, %s, ₹%d\n", 
+                i + 1, orders[i].orderID, orders[i].customerName, orders[i].product, orders[i].amount);
+    }
+    fclose(fptr);
+    printf("Record saved in \"orders.txt\"\n");
+}
+void searchOrder(struct Order orders[], int n, int orderID) {
+    for (int i = 0; i < n; i++) {
+        if (orders[i].orderID == orderID) {
+            printf("Order Found: %s - %s - ₹%d\n", 
+                   orders[i].customerName, orders[i].product, orders[i].amount);
+            return;
+        }
+    }
+    printf("Order not found.\n");
+}
+
+int main() {
+    int n;
+    printf("Enter number of orders: ");
+    scanf("%d", &n);
+
+    struct Order orders[n];
+    for (int i = 0; i < n; i++) {
+        printf("Order %d:\n", i + 1);
+        printf("Enter Order ID: ");
+        scanf("%d", &orders[i].orderID);
+        printf("Enter Customer Name: ");
+        scanf("%s", orders[i].customerName);
+        printf("Enter Product: ");
+        scanf("%s", orders[i].product);
+        printf("Enter Amount: ₹");
+        scanf("%d", &orders[i].amount);
+    }
+
+    int searchID;
+    printf("Enter Order ID to search: ");
+    scanf("%d", &searchID);
+
+    searchOrder(orders, n, searchID);
+    writeToFile(orders, n);
+
+    return 0;
+}
