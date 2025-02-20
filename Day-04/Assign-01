@@ -1,0 +1,69 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Define the structure to hold student details
+struct Student {
+    int rollNo;
+    char name[50];
+    char course[50];
+    int marks;
+};
+
+// Function to save student records to a file
+void saveToFile(struct Student students[], int count) {
+    FILE *file = fopen("students.txt", "w");
+    if (file == NULL) {
+        printf("Error opening file!\n");
+        return;
+    }
+    for (int i = 0; i < count; i++) {
+        fprintf(file, "Roll No: %d, Name: %s, Course: %s, Marks: %d\n",
+                students[i].rollNo, students[i].name, students[i].course, students[i].marks);
+    }
+    fclose(file);
+    printf("Record saved in \"students.txt\"\n");
+}
+
+// Function to search for a student by Roll No
+void searchStudent(struct Student students[], int count, int rollNo) {
+    for (int i = 0; i < count; i++) {
+        if (students[i].rollNo == rollNo) {
+            printf("Student Found: %s, %s, Marks: %d\n", students[i].name, students[i].course, students[i].marks);
+            return;
+        }
+    }
+    printf("Student with Roll No %d not found!\n", rollNo);
+}
+
+int main() {
+    int numStudents, rollNoToSearch;
+    
+    printf("Enter number of students: ");
+    scanf("%d", &numStudents);
+
+    struct Student students[numStudents];
+
+    // Input student details
+    for (int i = 0; i < numStudents; i++) {
+        printf("Student %d:\n", i + 1);
+        printf("Enter Roll No: ");
+        scanf("%d", &students[i].rollNo);
+        printf("Enter Name: ");
+        scanf("%s", students[i].name);
+        printf("Enter Course: ");
+        scanf("%s", students[i].course);
+        printf("Enter Marks: ");
+        scanf("%d", &students[i].marks);
+    }
+
+    // Save records to file
+    saveToFile(students, numStudents);
+
+    // Search for a student by Roll No
+    printf("Enter Roll No to search: ");
+    scanf("%d", &rollNoToSearch);
+    searchStudent(students, numStudents, rollNoToSearch);
+
+    return 0;
+}
