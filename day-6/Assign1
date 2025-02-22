@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <string.h>
+typedef struct {
+    char title[50];
+    double rating;
+} Movie;
+void swap(Movie *m1, Movie *m2) {
+    Movie temp = *m1;
+    *m1 = *m2;
+    *m2 = temp;
+}
+void sort_movies(Movie movies[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (movies[i].rating < movies[j].rating) {
+                swap(&movies[i], &movies[j]);
+            }
+        }
+    }
+int search_movie(Movie movies[], int n, char *title) {
+    for (int i = 0; i < n; i++) {
+        if (strcmp(movies[i].title, title) == 0) {
+            return i;
+        }
+    }
+    return -1;
+}
+void display_top_movies(Movie movies[], int n) {
+    printf("Top 3 Movies:\n");
+    for (int i = 0; i < 3 && i < n; i++) {
+        printf("%s (Rating: %.1f)\n", movies[i].title, movies[i].rating);
+    }
+}
+int main() {
+    Movie movies[] = {
+        {"Movie A", 8.5},
+        {"Movie B", 9.2},
+        {"Movie C", 7.8}
+    };
+    int n = sizeof(movies) / sizeof(movies[0]);
+printf("Movies:\n");
+    for (int i = 0; i < n; i++) {
+        printf("{\"Title\": \"%s\", \"Rating\": %.1f}\n", movies[i].title, movies[i].rating);
+    }
+
+    sort_movies(movies, n);
+
+    printf("Sorted by Rating:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%s (%.1f), ", movies[i].title, movies[i].rating);
+    }
+    printf("\n");
+
+    char title[] = "Movie A";
+    int index = search_movie(movies, n, title);
+    if (index != -1) {
+        printf("Search '%s': Found (Rating: %.1f)\n", title, movies[index].rating);
+    } else {
+        printf("Search '%s': Not Found\n", title);
+    }
+
+    display_top_movies(movies, n);
+
+    return 0;
+}
