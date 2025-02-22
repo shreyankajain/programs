@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct Patient {
+    int id;
+    char name[50];
+    struct Patient *next;
+    struct Patient *prev;
+} Patient;
+Patient* create_patient(int id, char *name) {
+    Patient *new_patient = (Patient*) malloc(sizeof(Patient));
+    new_patient->id = id;
+    strcpy(new_patient->name, name);
+    new_patient->next = NULL;
+    new_patient->prev = NULL;
+    return new_patient;
+}
+void add_patient(Patient **head, Patient **tail, int id, char *name) {
+    Patient *new_patient = create_patient(id, name);
+    if (*head == NULL) {
+        *head = new_patient;
+        *tail = new_patient;
+    } else {
+        (*tail)->next = new_patient;
+        new_patient->prev = *tail;
+        *tail = new_patient;
+    }
+    printf("New Patient Admitted: %s (ID %d)\n", name, id);
+}
+void remove_patient(Patient **head, Patient **tail, int id) {
+    Patient *current = *head;
+    while (current != NULL) {
+        if (current->id == id) {
+            if (current->prev != NULL) {
+                current->prev->next = current->next;
+            } else {
+                *head = current->next;
+            }
+            if (current->next != NULL) {
+                current->next->prev = current->prev;
+            } else {
+                *tail = current->prev;
+            }
+            free(current);
+            printf("Discharging: %d\n", id);
+            return;
+        }
+        current = current->next;
+    }
+    printf("Patient not found.\n");
+}
+void display_patients(Patient *head) {
+    Patient *current = head;
+    while (current != NULL) {
+        printf("%s", current->name);
+        if (current->next != NULL) {
+            printf(" ↔ ");
+        }
+        current = current->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    Patient *head = NULL;
+    Patient *tail = NULL;
+
+    add_patient(&head, &tail, 201, "John");
+    add_patient(&head, &tail, 202, "Mary");
+    add_patient(&head, &tail, 203, "David");
+
+    printf("Remaining Patients: ");
+    display_patients(head);
+
+    remove_patient(&head, &tail, 202);
+
+    printf("Remaining Patients: ");
+    display_patients(head);
+
+    return 0;
+}
