@@ -1,0 +1,56 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define MAX_CALLS 100
+
+typedef struct {
+    int id;
+    char name[50];
+} Call;
+
+void addCall(Call queue[], int *rear, int id, char name[]);
+void processCall(Call queue[], int *front, int rear);
+void displayRemainingCalls(Call queue[], int front, int rear);
+
+int main() {
+    Call queue[MAX_CALLS];
+    int front = 0, rear = -1;
+
+    addCall(queue, &rear, 101, "Alice");
+    addCall(queue, &rear, 102, "Bob");
+    processCall(queue, &front, rear);
+    displayRemainingCalls(queue, front, rear);
+
+    return 0;
+}
+
+void addCall(Call queue[], int *rear, int id, char name[]) {
+    if (*rear < MAX_CALLS - 1) {
+        (*rear)++;
+        queue[*rear].id = id;
+        strcpy(queue[*rear].name, name);
+        printf("New Call Added: Call %d from %s\n", id, name);
+    } else {
+        printf("Queue is full. Cannot add new call.\n");
+    }
+}
+void processCall(Call queue[], int *front, int rear) {
+    if (*front <= rear) {
+        printf("Processing Call: %d from %s\n", queue[*front].id, queue[*front].name);
+        (*front)++;
+    } else {
+        printf("No calls to process.\n");
+    }
+}
+
+void displayRemainingCalls(Call queue[], int front, int rear) {
+    if (front <= rear) {
+        printf("Remaining Calls:\n");
+        for (int i = front; i <= rear; i++) {
+            printf("Call %d from %s\n", queue[i].id, queue[i].name);
+        }
+    } else {
+        printf("No remaining calls.\n");
+    }
+}
