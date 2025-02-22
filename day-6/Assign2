@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_ITEMS 10
+
+typedef struct {
+    char item[50];
+    int quantity;
+} Item;
+
+void sort_items(Item items[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (items[i].quantity > items[j].quantity) {
+                Item temp = items[i];
+                items[i] = items[j];
+                items[j] = temp;
+            }
+        }
+    }
+}
+
+int binary_search(Item items[], int n, char *target) {
+    int left = 0, right = n - 1;
+    while (left <= right) {
+        int mid = (left + right) / 2;
+        if (strcmp(items[mid].item, target) == 0) {
+            return mid;
+        } else if (strcmp(items[mid].item, target) < 0) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return -1;
+}
+
+void display_low_stock_items(Item items[], int n) {
+    printf("Low Stock Items:\n");
+    for (int i = 0; i < n; i++) {
+        if (items[i].quantity < 5) {
+            printf("%s (%d)\n", items[i].item, items[i].quantity);
+        }
+    }
+}
+
+int main() {
+    Item items[] = {
+        {"Sugar", 50},
+        {"Salt", 3},
+        {"Oil", 10}
+    };
+    int n = sizeof(items) / sizeof(items[0]);
+
+    printf("Inventory:\n");
+    for (int i = 0; i < n; i++) {
+        printf("{\"Item\": \"%s\", \"Quantity\": %d}\n", items[i].item, items[i].quantity);
+    }
+
+    sort_items(items, n);
+    printf("Sorted by Quantity:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%s (%d), ", items[i].item, items[i].quantity);
+    }
+    printf("\n");
+     char target[] = "Oil";
+    int index = binary_search(items, n, target);
+    if (index != -1) {
+        printf("Search '%s': Found (Quantity: %d)\n", target, items[index].quantity);
+    } else {
+        printf("Search '%s': Not Found\n", target);
+    }
+       display_low_stock_items(items, n);
+    return 0;
+}
