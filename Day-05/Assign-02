@@ -1,0 +1,41 @@
+
+#include <stdio.h>
+
+#define MAX_PASSENGERS 2 // Maximum number of passengers that can be booked
+
+typedef struct {
+    char name[50];
+} Passenger;
+
+Passenger queue[MAX_PASSENGERS];
+int front = 0, rear = 0; // Front and rear indices of the queue
+int size = 0; // Current size of the queue
+
+void add_reservation(char *name) {
+    if (size < MAX_PASSENGERS) {
+        strcpy(queue[rear].name, name);
+        rear = (rear + 1) % MAX_PASSENGERS;
+        size++;
+        printf("Booking Confirmed: Passenger %d (%s)\n", size, name);
+    } else {
+        printf("Waiting List: %s\n", name);
+    }
+}
+
+void process_bookings() {
+    if (size > 0) {
+        printf("Processing Booking: Passenger %d (%s)\n", 1, queue[front].name);
+        front = (front + 1) % MAX_PASSENGERS;
+        size--;
+    } else {
+        printf("No bookings to process.\n");
+    }
+}
+
+int main() {
+    add_reservation("Alice");
+    add_reservation("Bob");
+    add_reservation("Charlie");
+    process_bookings();
+    return 0 
+}
