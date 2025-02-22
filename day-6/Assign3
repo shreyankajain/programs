@@ -1,0 +1,76 @@
+#include <stdio.h>
+#define MAX_SEATS 10
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+void sort_seats(int seats[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (seats[i] > seats[j]) {
+                swap(&seats[i], &seats[j]);
+            }
+        }
+    }
+}
+int binary_search(int seats[], int n, int target) {
+    int left = 0, right = n - 1;
+    while (left <= right) {
+        int mid = (left + right) / 2;
+        if (seats[mid] == target) {
+            return mid;
+        } else if (seats[mid] < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return -1;
+}
+
+// Function to find the next available seat
+int next_available_seat(int seats[], int n, int current_seat) {
+    for (int i = 0; i < n; i++) {
+        if (seats[i] > current_seat) {
+            return seats[i];
+        }
+    }
+    return -1;
+}
+
+int main() {
+    int seats[] = {45, 12, 78, 23, 56};
+    int n = sizeof(seats) / sizeof(seats[0]);
+
+    printf("Available Seats: [");
+    for (int i = 0; i < n; i++) {
+        printf("%d, ", seats[i]);
+    }
+    printf("]\n");
+
+    sort_seats(seats, n);
+
+    printf("Sorted: [");
+    for (int i = 0; i < n; i++) {
+        printf("%d, ", seats[i]);
+    }
+    printf("]\n");
+
+    int target_seat = 23;
+    int index = binary_search(seats, n, target_seat);
+    if (index != -1) {
+        printf("Search Seat %d: Found (Available)\n", target_seat);
+    } else {
+        printf("Search Seat %d: Not Found\n", target_seat);
+    }
+
+    int next_seat = next_available_seat(seats, n, target_seat);
+    if (next_seat != -1) {
+        printf("Next Available Seat: %d\n", next_seat);
+    } else {
+        printf("No next available seat\n");
+    }
+
+    return 0;
+}
